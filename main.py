@@ -46,5 +46,5 @@ while(1):
 	print "Find SYN OK => %d" % i
 	# Find else handshake
 	# Find Data... starts with 'start'
-
+	print "1"
 f.close()
