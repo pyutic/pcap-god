@@ -6,7 +6,8 @@ def ip_decode(p):
 ts_arr = []
 buf_arr = []
 
-name = raw_input("Name => ")
+name = "bob_nc.pcap"
+#name = raw_input("Name => ")
 f = open(name,'rb')
 pcap = dpkt.pcap.Reader(f)
 
@@ -16,35 +17,29 @@ for a, b in pcap:
 
 #print len(ts_arr), len(buf_arr)
 
-start = 0
-syn_yes = 0
-while(1):
-	syn_yes = 0
-	# Find SYN
-	for i in range(start, len(ts_arr)):
-		ts = ts_arr[i]
-		buf = buf_arr[i]
+tcpstack = []
+flowdata = {}
 
-		eth = dpkt.ethernet.Ethernet(buf)
-		try:
-			ip = eth.data
-			tcp = ip.data
-			#print ip_decode(ip.src), ip_decode(ip.dst)
-			#print tcp.seq, tcp.ack
-			#print tcp.data
-			if(tcp.flags==dpkt.tcp.TH_SYN):
-				syn_yes = 1
-				start = i+1
-				break
-		except:
-			continue
-	
-	if(syn_yes == 0):
-		print "Cannot find SYN Anymore\nGood Bye~"
-		break
+for i in xrange(len(ts_arr)):
+	ts = ts_arr[i]
+	buf = buf_arr[i]
 
-	print "Find SYN OK => %d" % i
-	# Find else handshake
-	# Find Data... starts with 'start'
-	print "1"
+	eth = dpkt.ethernet.Ethernet(buf)
+	try:
+		ip = eth.data
+		tcp = ip.data
+		nm = str(ip_decode(ip.src)) + " " + str(tcp.sport) + " " + str(ip_decode(ip.dst)) + " " + str(tcp.dport)
+		if(tcp.flags==dpkt.tcp.TH_SYN):
+			# I Find SYN Now!
+			print "SYN : " + ip_decode(ip.src), tcp.sport, ip_decode(ip.dst), tcp.dport
+			tcpstack.append(nm)
+		elif(tcp.flags==(dpkt.tcp.TH_ACK | dpkt.tcp.TH_PUSH)):
+			if(nm in tcpstack):
+				# I finished 3-way handshake
+				print tcp.data
+	except:
+		continue
+
+# Find else handshake
+# Find Data... starts with 'start'
 f.close()
