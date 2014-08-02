@@ -3,12 +3,15 @@ import os
 import argparse
 import sys
 import re
+import time
 
 def ip_decode(p):
 	return ".".join(["%d" % ord(x) for x in str(p)])
 
 def regex_check(cond, data):
 	return bool(re.search(cond, data))
+
+tm = int(round(time.time() * 1000))
 
 ts_arr = []
 buf_arr = []
@@ -131,4 +134,5 @@ for i in xrange(len(ts_arr)):
 	except:
 		continue
 print "\x1b[41mAll is Well :)\x1b[0m"
+print "..." + str((int(round(time.time() * 1000))-tm)/1000.0) + "s"
 fi.close()
