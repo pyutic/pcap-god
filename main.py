@@ -15,7 +15,7 @@ buf_arr = []
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", help="Pcap File")
-parser.add_argument("-s", help="Source IP")
+parser.add_argument("-s", help="Source IP(Optional)")
 parser.add_argument("-d", help="Destination IP")
 parser.add_argument("-p", help="Destination Port", type=int)
 parser.add_argument("-o", help="Output Folder")
