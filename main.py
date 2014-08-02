@@ -73,7 +73,14 @@ stream_num = {}
 stream_packetnum = {}
 stream_last = {}
 sn = 0
+count = 0
+per = 10
 for i in xrange(len(ts_arr)):
+	count = count + 1
+
+	if((float(count*100)/len(ts_arr)) > per):
+		print str(per) + "% OK"
+		per = per + 10
 	ts = ts_arr[i]
 	buf = buf_arr[i]
 
