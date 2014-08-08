@@ -104,36 +104,23 @@ for i in xrange(len(ts_arr)):
 		elif(tcp.flags==(dpkt.tcp.TH_ACK | dpkt.tcp.TH_PUSH)):
 			if(tcpstack.has_key(src_set)):
 				# src -> dst
-				if(not stream_last.has_key(src_set)):
-					stream_last[src_set] = 0
-				elif(not stream_last[src_set]==0):
-					stream_packetnum[src_set] = stream_packetnum[src_set] + 1
 				#print "src -> dst"
 				#print tcp.data
-				f = open(OUTPUT + "/" + str(stream_num[src_set]) + "/s2d", "ab")
+				f = open(OUTPUT + "/" + str(stream_num[src_set]) + "/" + str(stream_packetnum[src_set]), "wb")
+				f.write("SD")
 				f.write(tcp.data)
 				f.close()
-				f = open(OUTPUT + "/" + str(stream_num[src_set]) + "/" + str(stream_packetnum[src_set]) + "_s2d", "ab")
-				f.write(tcp.data)
-				f.close()
-
-				stream_last[src_set] = 0
+				stream_packetnum[src_set] = stream_packetnum[src_set] + 1
 			if(src_set in tcpstack.values()):
 				# dst -> src
-				if(not stream_last.has_key(dst_set)):
-					stream_last[dst_set] = 1
-				elif(not stream_last[dst_set]==1):
-					stream_packetnum[dst_set] = stream_packetnum[dst_set] + 1
 				#print "dst -> src"
 				#print src_set + " -> " + dst_set
-				f = open(OUTPUT + "/" + str(stream_num[dst_set]) + "/d2s", "ab")
+				f = open(OUTPUT + "/" + str(stream_num[dst_set]) + "/" + str(stream_packetnum[dst_set]), "wb")
+				f.write("DS")
 				f.write(tcp.data)
 				f.close()
-				f = open(OUTPUT + "/" + str(stream_num[dst_set]) + "/" + str(stream_packetnum[dst_set]) + "_d2s", "ab")
-				f.write(tcp.data)
-				f.close()
-				
-				stream_last[dst_set] = 1
+				stream_packetnum[dst_set] = stream_packetnum[dst_set] + 1
+
 		elif(tcp.flags==(dpkt.tcp.TH_FIN | dpkt.tcp.TH_ACK)):
 			# Good bye~
 			if(tcpstack.has_key(src_set)):
