@@ -8,5 +8,6 @@ conn, addr = s.accept()
 
 for i in xrange(3):
 	data = conn.recv(1024)
-	conn.send(data*3)
+	print "recv : " + data
+	conn.send(data*4)
 
