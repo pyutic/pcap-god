@@ -1,9 +1,6 @@
-import socket, glob
+import socket, glob, argparse
 
-destIP = "localhost"
-destPort = 31337
-sz = 4096
-out = "OUT"
+sz = 409600
 
 def inout(destIP, destPort, data):
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,13 +27,27 @@ def inout(destIP, destPort, data):
 		i = i+1
 	return rt
 
+parser = argparse.ArgumentParser()
+parser.add_argument("-o", help="Output Folder")
+parser.add_argument("-d", help="Destination IP")
+parser.add_argument("-p", help="Destination Port", type=int)
+args = parser.parse_args()
 
-#inout(destIP, destPort, data)
+out = args.o
+destIP = args.d
+destPort = args.p
 
 for ii in glob.glob(out+"/*"):
 	data = []
-	for i in glob.glob(ii+"/*"):
+	i = 0
+	while(1):
 		# packet in one stream
-		f = open(i, "rb")
+		try:
+			f = open(ii+"/"+str(i), "rb")
+		except:
+			break
+		i = i+1
 		data.append(f.read())
+		f.close()
+	print destIP, destPort
 	inout(destIP, destPort, data)
